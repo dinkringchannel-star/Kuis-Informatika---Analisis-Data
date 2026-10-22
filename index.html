@@ -1,0 +1,67 @@
+
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apa yang Sedang Kamu Lakukan</title>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #000000;
+      font-family: Arial, sans-serif;
+    }
+
+    .container {
+      text-align: center;
+      padding: 20px;
+    }
+
+    .teks-atas {
+      color: #0000ff;
+      font-size: clamp(24px, 5vw, 55px);
+      font-weight: bold;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      text-shadow: 0 0 10px #0000ff;
+      animation: berkedip 1s infinite;
+    }
+
+    .teks-bawah {
+      color: #ff0000;
+      font-size: clamp(20px, 4vw, 45px);
+      font-weight: bold;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px #ff0000;
+      animation: berkedip 1s infinite;
+    }
+
+    @keyframes berkedip {
+      0%, 49% {
+        opacity: 1;
+      }
+      50%, 100% {
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="teks-atas">
+      APA YANG SEDANG KAMU LAKUKAN
+    </div>
+
+    <div class="teks-bawah">
+      WHAT ARE YOU DOING
+    </div>
+  </div>
+</body>
+</html>
