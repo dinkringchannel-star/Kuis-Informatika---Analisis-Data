@@ -1,67 +1,1259 @@
-
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apa yang Sedang Kamu Lakukan</title>
-
+  <title>Kuis Informatika (Analisis Data)- Kelas 9</title>
   <style>
-    body {
+    * {
+      box-sizing: border-box;
       margin: 0;
       padding: 0;
-      height: 100vh;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #667eea, #764ba2);
       display: flex;
+      align-items: flex-start;
       justify-content: center;
-      align-items: center;
-      background-color: #000000;
-      font-family: Arial, sans-serif;
+      padding: 20px 15px;
+      font-family: 'Segoe UI', Tahoma, Arial, sans-serif;
+      color: #222;
+      -webkit-user-select: none;
+      /* Safari */
+      -ms-user-select: none;
+      /* IE 10 dan lama */
+      user-select: none;
+      /* Standar modern */
+    }
+
+    .created-by {
+      position: absolute;
+      bottom: 20px;
+      right: 25px;
+      font-size: 14px;
+      color: #d7e0e4;
+      font-weight: 500;
+      text-align: center;
     }
 
     .container {
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 25px;
+      max-width: 750px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, .3);
+      max-height: calc(100vh - 40px);
+      overflow-y: auto;
+      scroll-behavior: smooth;
+    }
+
+    .container::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .container::-webkit-scrollbar-track {
+      background: #f0f0f0;
+      border-radius: 4px;
+    }
+
+    .container::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      border-radius: 4px;
+    }
+
+    h1 {
       text-align: center;
-      padding: 20px;
+      color: #3a2e7a;
+      margin-bottom: 10px;
+      font-size: 24px;
     }
 
-    .teks-atas {
-      color: #0000ff;
-      font-size: clamp(24px, 5vw, 55px);
-      font-weight: bold;
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      text-shadow: 0 0 10px #0000ff;
-      animation: berkedip 1s infinite;
+    .subtitle {
+      text-align: center;
+      color: #555;
+      margin-bottom: 15px;
+      font-size: 15px;
+      font-weight: 600;
     }
 
-    .teks-bawah {
-      color: #ff0000;
-      font-size: clamp(20px, 4vw, 45px);
-      font-weight: bold;
-      text-transform: uppercase;
-      text-shadow: 0 0 10px #ff0000;
-      animation: berkedip 1s infinite;
+    .info-bar {
+      display: flex;
+      justify-content: space-between;
+      background: #eef0ff;
+      padding: 12px 18px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      font-weight: 700;
+      font-size: 16px;
+      color: #2c2c54;
+      border: 2px solid #d0d5ff;
+      position: sticky;
+      top: 0;
+      z-index: 10;
     }
 
-    @keyframes berkedip {
-      0%, 49% {
-        opacity: 1;
+    .progress {
+      height: 10px;
+      background: #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+      margin-bottom: 15px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #667eea, #764ba2);
+      width: 0%;
+      transition: width .4s;
+    }
+
+    .question {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 15px;
+      line-height: 1.5;
+      color: #2c2c54;
+      background: #b9f5b0;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .option {
+      padding: 14px 16px;
+      background: #5a15ef;
+      border: 2px solid #e0dcf5;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: .2s;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .option:hover:not(:disabled) {
+      background: #d62a55;
+      transform: translateX(5px);
+    }
+
+    .option:disabled {
+      cursor: not-allowed;
+      opacity: 0.9;
+    }
+
+    .option.correct {
+      background: #b9f5b0;
+      border-color: #2e7d32;
+      color: #1b5e20;
+      font-weight: 500;
+    }
+
+    .option.wrong {
+      background: #ffb3b3;
+      border-color: #c62828;
+      color: #7f0000;
+      font-weight: 500;
+    }
+
+    .controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      flex: 1;
+      padding: 12px;
+      border: none;
+      border-radius: 12px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: #ffffff;
+      font-weight: 700;
+      cursor: pointer;
+      font-size: 15px;
+      transition: .2s;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, .25);
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-small {
+      flex: 0 0 auto;
+      padding: 12px 16px;
+      font-size: 14px;
+      background: linear-gradient(135deg, #f093fb, #f5576c);
+    }
+
+    .feedback {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 12px;
+      font-weight: 700;
+      text-align: center;
+      display: none;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
+    .feedback.show {
+      display: block;
+    }
+
+    .feedback.benar {
+      background: #b9f5b0;
+      color: #1b5e20;
+      border: 2px solid #2e7d32;
+    }
+
+    .feedback.salah {
+      background: #ffb3b3;
+      color: #7f0000;
+      border: 2px solid #c62828;
+    }
+
+    .start-screen,
+    .end-screen {
+      text-align: center;
+      padding: 15px 10px;
+    }
+
+    .end-screen h2 {
+      color: #3a2e7a;
+      margin-bottom: 10px;
+      font-size: 26px;
+    }
+
+    .score-big {
+      font-size: 60px;
+      font-weight: 900;
+      color: #764ba2;
+      margin: 10px 0;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, .1);
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .music-toggle {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      background: #fff;
+      border: 2px solid #764ba2;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 20px;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .2);
+      z-index: 100;
+    }
+
+    p {
+      color: #333;
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .info-box {
+      background: #fff3cd;
+      border: 2px solid #ffc107;
+      color: #856404;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 15px 0;
+      font-size: 14px;
+      text-align: left;
+    }
+
+    .info-box strong {
+      color: #856404;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
       }
-      50%, 100% {
-        opacity: 0;
+
+      .container {
+        padding: 18px;
+        max-height: calc(100vh - 20px);
+      }
+
+      h1 {
+        font-size: 20px;
+      }
+
+      .question {
+        font-size: 16px;
+        padding: 12px;
+      }
+
+      .option {
+        font-size: 15px;
+        padding: 12px 14px;
+      }
+
+      .info-bar {
+        font-size: 14px;
+        padding: 10px 14px;
+      }
+
+      .score-big {
+        font-size: 50px;
+      }
+
+      .music-toggle {
+        width: 42px;
+        height: 42px;
+        font-size: 18px;
+        top: 10px;
+        right: 10px;
       }
     }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div class="teks-atas">
-      APA YANG SEDANG KAMU LAKUKAN
+
+  <button class="music-toggle" id="musicBtn" title="Musik">🔇</button>
+
+  <div class="created-by">Created by Heru Yusro</div>
+
+  <div class="container" id="mainContainer">
+    <div id="startScreen" class="start-screen">
+      <h1>🌱 Kuis Informatika Kelas 9</h1>
+      <p class="subtitle">Analisis Data</p>
+      <div class="info-box">
+        <strong>📱 Info Penting untuk HP Android:</strong><br>
+        • Pastikan <strong>volume media HP tidak silent/mute</strong><br>
+        • Tekan <strong>"Test Suara"</strong> untuk mengaktifkan audio<br>
+        • Izinkan suara jika browser meminta
+      </div>
+      <p style="margin:15px 0;">Jawab 50 pertanyaan. Skor skala <strong>10 - 100</strong>.</p>
+      <button id="testBtn" onclick="testSuara()"
+        style="margin-bottom:10px; background: linear-gradient(135deg, #11998e, #38ef7d);">🔊 Test Suara Dulu</button>
+      <button onclick="mulaiKuis()">🎯 Mulai Kuis</button>
     </div>
 
-    <div class="teks-bawah">
-      WHAT ARE YOU DOING
+    <div id="quizScreen" class="hidden">
+      <h1>🌱 Analisis Data</h1>
+      <div class="info-bar">
+        <span>Soal: <span id="qNum">1</span>/50</span>
+        <span>Skor: <span id="score">2</span></span>
+      </div>
+      <div class="progress">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+      <div class="question" id="questionText"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+      <div class="controls">
+        <button class="btn-small" onclick="bacaSoal()">🔊 Baca Lagi</button>
+        <button id="nextBtn" onclick="nextSoal()" disabled>Lanjut ➡</button>
+      </div>
+    </div>
+
+    <div id="endScreen" class="end-screen hidden">
+      <h2>🎉 Kuis Selesai!</h2>
+      <p>Skor akhir kamu:</p>
+      <div class="score-big" id="finalScore">2</div>
+      <p id="pesanAkhir" style="margin-bottom:15px;"></p>
+      <button onclick="location.reload()">🔄 Ulangi Kuis</button>
     </div>
   </div>
+
+  <script>
+
+    // ====== LAPORAN AKTIVITAS KE GOOGLE SPREADSHEET ======
+    // Ganti URL di bawah dengan URL Web App Google Apps Script yang berakhiran /exec.
+    const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbx16OflbXEh-gNZKUOfq4y2sE_-vDGbrt75-xJF6PMRXWRuEy05ojiGSLRtRZ0HD-JpMA/exec";
+
+    let sesiKuis = "";
+    try {
+      sesiKuis = sessionStorage.getItem("kuis_sesi_ipa") || "";
+      if (!sesiKuis) {
+        sesiKuis = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : "sesi-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+        sessionStorage.setItem("kuis_sesi_ipa", sesiKuis);
+      }
+    } catch (e) {
+      sesiKuis = "sesi-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+    }
+
+    function catatAktivitas(aktivitas, nilaiTambahan = {}) {
+      // PERBAIKAN: Mengecek apakah URL masih default/kosong menggunakan .includes()
+      if (!URL_APPS_SCRIPT || URL_APPS_SCRIPT.includes("https://script.google.com/macros/s/AKfycbx16OflbXEh-gNZKUOfq4y2sE_-vDGbrt75-xJF6PMRXWRuEy05ojiGSLRtRZ0HD-JpMA/execc")) {
+        console.warn("Laporan belum aktif. Isi URL_APPS_SCRIPT dengan URL Web App Apps Script yang valid.");
+        return;
+      }
+
+      const data = {
+        aktivitas: aktivitas,
+        halaman: "Kuis Informatika-Analisis Data",
+        url: location.href,
+        referrer: document.referrer || "",
+        sesi: sesiKuis,
+        perangkat: navigator.userAgent || "",
+        skor: nilaiTambahan.skor ?? "",
+        jumlahSoal: nilaiTambahan.jumlahSoal ?? 50,
+        jawabanBenar: nilaiTambahan.jawabanBenar ?? ""
+      };
+
+      // mode no-cors membuat respons tidak bisa dibaca browser, tetapi permintaan dikirim.
+      fetch(URL_APPS_SCRIPT, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(data),
+        keepalive: true
+      }).catch(err => console.warn("Gagal mengirim laporan aktivitas:", err));
+    }
+
+    // Catat kunjungan ketika halaman dibuka.
+    catatAktivitas("Halaman dibuka");
+
+
+
+    // ====== 50 PERTANYAAN ======
+    const soalAsli = [
+
+      {
+        q: "Apa yang dimaksud dengan analisis data?",
+        o: [
+          "Proses menghapus semua data",
+          "Proses mengumpulkan, mengolah, dan menafsirkan data untuk memperoleh informasi",
+          "Proses membuat perangkat keras komputer",
+          "Proses mengganti sistem operasi"
+        ],
+        a: 1
+      },
+      {
+        q: "Apa tujuan utama analisis data?",
+        o: [
+          "Memperbanyak jumlah file",
+          "Mengubah semua data menjadi gambar",
+          "Membantu memperoleh informasi dan mengambil keputusan",
+          "Menghapus data yang sulit dibaca"
+        ],
+        a: 2
+      },
+      {
+        q: "Sekumpulan fakta berupa angka, teks, atau simbol yang belum diolah disebut ...",
+        o: [
+          "Data",
+          "Informasi",
+          "Kesimpulan",
+          "Keputusan"
+        ],
+        a: 0
+      },
+      {
+        q: "Data yang telah diolah sehingga memiliki makna bagi pengguna disebut ...",
+        o: [
+          "Variabel",
+          "Sampel",
+          "Kumpulan angka",
+          "Informasi"
+        ],
+        a: 3
+      },
+      {
+        q: "Manakah contoh data kuantitatif?",
+        o: [
+          "Warna favorit siswa",
+          "Jumlah siswa yang hadir sebanyak 28 orang",
+          "Jenis olahraga favorit",
+          "Pendapat siswa tentang sekolah"
+        ],
+        a: 1
+      },
+      {
+        q: "Manakah contoh data kualitatif?",
+        o: [
+          "Tinggi badan 160 cm",
+          "Nilai ujian 85",
+          "Warna tas siswa adalah biru",
+          "Jumlah buku sebanyak 12"
+        ],
+        a: 2
+      },
+      {
+        q: "Data yang diperoleh langsung melalui wawancara dengan narasumber termasuk ...",
+        o: [
+          "Data primer",
+          "Data sekunder",
+          "Data arsip pihak lain",
+          "Data hasil salinan"
+        ],
+        a: 0
+      },
+      {
+        q: "Data yang diperoleh dari laporan atau publikasi yang sudah tersedia disebut ...",
+        o: [
+          "Data pribadi",
+          "Data acak",
+          "Data primer",
+          "Data sekunder"
+        ],
+        a: 3
+      },
+      {
+        q: "Kegiatan mengumpulkan data melalui pertanyaan kepada banyak responden disebut ...",
+        o: [
+          "Simulasi",
+          "Survei",
+          "Enkripsi",
+          "Kompresi"
+        ],
+        a: 1
+      },
+      {
+        q: "Seorang siswa ingin mengetahui olahraga favorit teman sekelasnya. Cara pengumpulan data yang tepat adalah ...",
+        o: [
+          "Mengukur suhu kelas",
+          "Menghitung jumlah meja",
+          "Membagikan kuesioner tentang olahraga favorit",
+          "Mengamati warna seragam"
+        ],
+        a: 2
+      },
+      {
+        q: "Apa yang dimaksud dengan responden dalam survei?",
+        o: [
+          "Orang yang memberikan jawaban terhadap pertanyaan survei",
+          "Orang yang membuat perangkat komputer",
+          "Program untuk mengolah gambar",
+          "Alat untuk mencetak laporan"
+        ],
+        a: 0
+      },
+      {
+        q: "Mengapa data perlu dibersihkan sebelum dianalisis?",
+        o: [
+          "Agar ukuran file selalu bertambah",
+          "Agar seluruh data memiliki nilai yang sama",
+          "Agar data dapat diubah menjadi suara",
+          "Untuk memperbaiki kesalahan, duplikasi, dan ketidakkonsistenan"
+        ],
+        a: 3
+      },
+      {
+        q: "Apa yang dimaksud dengan data duplikat?",
+        o: [
+          "Data yang belum pernah dikumpulkan",
+          "Data yang tercatat lebih dari sekali secara tidak semestinya",
+          "Data yang selalu berbentuk angka",
+          "Data yang tidak dapat disimpan"
+        ],
+        a: 1
+      },
+      {
+        q: "Dalam tabel data siswa, satu baris biasanya mewakili ...",
+        o: [
+          "Satu jenis perangkat lunak",
+          "Satu warna grafik",
+          "Satu entitas atau satu catatan data",
+          "Satu rumus matematika"
+        ],
+        a: 2
+      },
+      {
+        q: "Dalam tabel data siswa, kolom 'Nama' dan 'Nilai' disebut ...",
+        o: [
+          "Atribut atau variabel",
+          "Kesimpulan akhir",
+          "Diagram alir",
+          "Sumber listrik"
+        ],
+        a: 0
+      },
+      {
+        q: "Apa fungsi aplikasi spreadsheet seperti Microsoft Excel atau Google Sheets?",
+        o: [
+          "Menggantikan seluruh perangkat keras",
+          "Membuat jaringan internet secara otomatis",
+          "Memperbaiki komponen komputer yang rusak",
+          "Mengelola tabel, melakukan perhitungan, dan menganalisis data"
+        ],
+        a: 3
+      },
+      {
+        q: "Dalam spreadsheet, pertemuan antara baris dan kolom disebut ...",
+        o: [
+          "Lembar",
+          "Sel",
+          "Berkas",
+          "Grafik"
+        ],
+        a: 1
+      },
+      {
+        q: "Rumus spreadsheet untuk menjumlahkan nilai pada sel A1 sampai A5 adalah ...",
+        o: [
+          "=COUNT(A1:A5)",
+          "=AVERAGE(A1:A5)",
+          "=SUM(A1:A5)",
+          "=MAX(A1:A5)"
+        ],
+        a: 2
+      },
+      {
+        q: "Fungsi AVERAGE pada spreadsheet digunakan untuk menghitung ...",
+        o: [
+          "Nilai rata-rata",
+          "Nilai terbesar",
+          "Jumlah sel yang berisi angka",
+          "Nilai terkecil"
+        ],
+        a: 0
+      },
+      {
+        q: "Fungsi MAX pada spreadsheet digunakan untuk mencari ...",
+        o: [
+          "Nilai terkecil",
+          "Jumlah seluruh nilai",
+          "Nilai rata-rata",
+          "Nilai terbesar"
+        ],
+        a: 3
+      },
+      {
+        q: "Fungsi MIN pada spreadsheet digunakan untuk mencari ...",
+        o: [
+          "Jumlah data",
+          "Nilai terkecil",
+          "Nilai terbesar",
+          "Nilai rata-rata"
+        ],
+        a: 1
+      },
+      {
+        q: "Apa kegunaan fungsi COUNT pada spreadsheet?",
+        o: [
+          "Menjumlahkan seluruh nilai angka",
+          "Mencari nilai paling besar",
+          "Menghitung banyaknya sel yang berisi angka",
+          "Mengurutkan data berdasarkan abjad"
+        ],
+        a: 2
+      },
+      {
+        q: "Data nilai ulangan adalah 70, 80, 90, dan 100. Berapakah nilai rata-ratanya?",
+        o: [
+          "85",
+          "80",
+          "90",
+          "95"
+        ],
+        a: 0
+      },
+      {
+        q: "Data jumlah buku yang dibaca lima siswa adalah 2, 4, 3, 5, dan 6. Berapakah jumlah seluruh buku?",
+        o: [
+          "15",
+          "18",
+          "25",
+          "20"
+        ],
+        a: 3
+      },
+      {
+        q: "Data nilai siswa adalah 60, 75, 85, 90, dan 95. Berapakah nilai tertingginya?",
+        o: [
+          "85",
+          "95",
+          "90",
+          "60"
+        ],
+        a: 1
+      },
+      {
+        q: "Apa yang dimaksud dengan median?",
+        o: [
+          "Nilai yang paling sering muncul",
+          "Jumlah seluruh nilai",
+          "Nilai tengah setelah data diurutkan",
+          "Selisih nilai terbesar dan terkecil"
+        ],
+        a: 2
+      },
+      {
+        q: "Data yang sudah diurutkan adalah 3, 5, 7, 9, dan 11. Berapakah mediannya?",
+        o: [
+          "7",
+          "5",
+          "9",
+          "11"
+        ],
+        a: 0
+      },
+      {
+        q: "Apa yang dimaksud dengan modus dalam sekumpulan data?",
+        o: [
+          "Nilai rata-rata",
+          "Nilai paling besar",
+          "Nilai tengah",
+          "Nilai yang paling sering muncul"
+        ],
+        a: 3
+      },
+      {
+        q: "Data jumlah saudara siswa adalah 1, 2, 2, 3, 2, dan 4. Berapakah modusnya?",
+        o: [
+          "1",
+          "2",
+          "3",
+          "4"
+        ],
+        a: 1
+      },
+      {
+        q: "Apa fungsi fitur Sort pada spreadsheet?",
+        o: [
+          "Menghapus semua data",
+          "Membuat kata sandi",
+          "Mengurutkan data berdasarkan kriteria tertentu",
+          "Mengubah angka menjadi suara"
+        ],
+        a: 2
+      },
+      {
+        q: "Apa fungsi fitur Filter pada spreadsheet?",
+        o: [
+          "Menampilkan data yang memenuhi kriteria tertentu",
+          "Menghapus seluruh baris secara otomatis",
+          "Mengganti semua angka dengan teks",
+          "Menghitung rata-rata seluruh kolom tanpa rumus"
+        ],
+        a: 0
+      },
+      {
+        q: "Seorang guru ingin melihat hanya siswa yang nilainya di atas 80. Fitur yang paling tepat digunakan adalah ...",
+        o: [
+          "Merge Cells",
+          "Page Layout",
+          "WordArt",
+          "Filter"
+        ],
+        a: 3
+      },
+      {
+        q: "Grafik yang paling tepat untuk membandingkan jumlah siswa pada beberapa kelas adalah ...",
+        o: [
+          "Diagram alir",
+          "Diagram batang",
+          "Peta konsep",
+          "Diagram jaringan"
+        ],
+        a: 1
+      },
+      {
+        q: "Grafik yang cocok untuk menunjukkan perubahan suhu setiap jam selama satu hari adalah ...",
+        o: [
+          "Diagram lingkaran",
+          "Piktogram tanpa urutan waktu",
+          "Diagram garis",
+          "Tabel gambar"
+        ],
+        a: 2
+      },
+      {
+        q: "Diagram lingkaran paling tepat digunakan untuk menunjukkan ...",
+        o: [
+          "Proporsi setiap kategori terhadap keseluruhan",
+          "Urutan langkah algoritma",
+          "Hubungan antarperangkat komputer",
+          "Perubahan nilai setiap detik secara rinci"
+        ],
+        a: 0
+      },
+      {
+        q: "Mengapa judul grafik penting?",
+        o: [
+          "Agar jumlah data bertambah",
+          "Agar grafik selalu berbentuk lingkaran",
+          "Agar semua nilai menjadi sama",
+          "Agar pembaca mengetahui informasi yang disajikan"
+        ],
+        a: 3
+      },
+      {
+        q: "Apa yang dimaksud dengan visualisasi data?",
+        o: [
+          "Menghapus data yang tidak digunakan",
+          "Menyajikan data dalam bentuk visual seperti grafik atau diagram",
+          "Mengubah data menjadi kata sandi",
+          "Memindahkan seluruh data ke perangkat lain"
+        ],
+        a: 1
+      },
+      {
+        q: "Apa manfaat menggunakan tabel dalam penyajian data?",
+        o: [
+          "Menjamin semua data benar",
+          "Menghilangkan kebutuhan analisis",
+          "Menyusun data agar mudah dibaca dan dibandingkan",
+          "Mengubah data numerik menjadi gambar secara otomatis"
+        ],
+        a: 2
+      },
+      {
+        q: "Apa yang dimaksud dengan pola dalam analisis data?",
+        o: [
+          "Kecenderungan atau keteraturan yang terlihat dalam data",
+          "Kesalahan pengetikan pada dokumen",
+          "Nama aplikasi untuk menggambar",
+          "Proses mematikan komputer"
+        ],
+        a: 0
+      },
+      {
+        q: "Penjualan toko meningkat setiap bulan selama enam bulan berturut-turut. Hal ini menunjukkan ...",
+        o: [
+          "Data tidak memiliki keteraturan",
+          "Semua bulan memiliki penjualan yang sama",
+          "Penjualan pasti turun bulan berikutnya",
+          "Pola peningkatan penjualan selama periode tersebut"
+        ],
+        a: 3
+      },
+      {
+        q: "Apa yang dimaksud dengan outlier dalam analisis data?",
+        o: [
+          "Nilai rata-rata dari semua data",
+          "Nilai yang jauh berbeda dari sebagian besar data lainnya",
+          "Nilai yang selalu muncul paling sering",
+          "Data yang telah diurutkan berdasarkan abjad"
+        ],
+        a: 1
+      },
+      {
+        q: "Mengapa sumber data perlu diperiksa sebelum digunakan?",
+        o: [
+          "Agar data menjadi lebih banyak",
+          "Agar semua hasil sesuai keinginan",
+          "Untuk menilai keandalan, relevansi, dan ketepatan data",
+          "Agar tidak perlu menyimpan data"
+        ],
+        a: 2
+      },
+      {
+        q: "Apa yang dimaksud dengan sampel dalam pengumpulan data?",
+        o: [
+          "Sebagian anggota populasi yang dipilih untuk mewakili populasi",
+          "Seluruh data yang selalu dikumpulkan tanpa pengecualian",
+          "Kesimpulan yang dibuat setelah analisis",
+          "Grafik yang digunakan untuk laporan"
+        ],
+        a: 0
+      },
+      {
+        q: "Dalam penelitian tentang kebiasaan membaca siswa kelas 9, seluruh siswa kelas 9 di sekolah tersebut disebut ...",
+        o: [
+          "Variabel",
+          "Sampel",
+          "Grafik",
+          "Populasi"
+        ],
+        a: 3
+      },
+      {
+        q: "Apa risiko jika sampel survei hanya diambil dari teman dekat peneliti?",
+        o: [
+          "Data pasti menjadi lebih akurat",
+          "Hasil survei mungkin bias dan tidak mewakili populasi",
+          "Jumlah populasi otomatis berkurang",
+          "Semua jawaban pasti sama"
+        ],
+        a: 1
+      },
+      {
+        q: "Apa yang dimaksud dengan privasi data?",
+        o: [
+          "Kebebasan menyebarkan semua informasi",
+          "Kegiatan menghapus semua hasil penelitian",
+          "Perlindungan informasi pribadi dari penggunaan atau pengungkapan yang tidak semestinya",
+          "Proses mengurutkan data dari kecil ke besar"
+        ],
+        a: 2
+      },
+      {
+        q: "Saat mengumpulkan data teman sekelas, tindakan yang paling tepat adalah ...",
+        o: [
+          "Mengumpulkan hanya data yang diperlukan dan menjaga kerahasiaannya",
+          "Menyebarkan nomor telepon semua responden",
+          "Mempublikasikan alamat rumah tanpa izin",
+          "Menggunakan data untuk tujuan lain tanpa pemberitahuan"
+        ],
+        a: 0
+      },
+      {
+        q: "Apa yang dimaksud dengan kesimpulan dalam analisis data?",
+        o: [
+          "Daftar semua aplikasi yang digunakan",
+          "Kumpulan data mentah tanpa pengolahan",
+          "Gambar yang menghiasi laporan",
+          "Pernyataan hasil penafsiran berdasarkan bukti dari data"
+        ],
+        a: 3
+      },
+      {
+        q: "Sebuah survei menunjukkan bahwa 18 dari 30 siswa menyukai sepak bola. Berapa persentase siswa yang menyukai sepak bola?",
+        o: [
+          "40%",
+          "60%",
+          "70%",
+          "80%"
+        ],
+        a: 1
+      },
+      {
+        q: "Mengapa hasil analisis data sebaiknya disajikan secara jujur dan objektif?",
+        o: [
+          "Agar hasil selalu mendukung pendapat peneliti",
+          "Agar data yang tidak sesuai dapat disembunyikan",
+          "Agar kesimpulan mencerminkan bukti dan tidak menyesatkan pembaca",
+          "Agar jumlah responden terlihat lebih besar"
+        ],
+        a: 2
+      }
+    ];
+
+
+    // ====== FUNGSI ACAK (Fisher-Yates Shuffle) ======
+    function shuffleArray(arr) {
+      const shuffled = [...arr];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      return shuffled;
+    }
+
+    // ====== AUDIO SYSTEM ======
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        try { audioCtx = new (window.AudioContext || window.webkitAudioContext)(); }
+        catch (e) { console.warn('AudioContext error:', e); }
+      }
+      return audioCtx;
+    }
+
+    function unlockAudio() {
+      const ctx = initAudio();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') ctx.resume();
+      try {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.frequency.value = 440;
+        g.gain.setValueAtTime(0.001, ctx.currentTime);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(); o.stop(ctx.currentTime + 0.05);
+      } catch (e) { }
+    }
+
+    function playTone(freq, dur, type = 'sine', vol = 0.3) {
+      const ctx = initAudio();
+      if (!ctx) return;
+      if (ctx.state === 'suspended') ctx.resume();
+      try {
+        const o = ctx.createOscillator();
+        const g = ctx.createGain();
+        o.type = type; o.frequency.value = freq;
+        g.gain.setValueAtTime(vol, ctx.currentTime);
+        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+        o.connect(g); g.connect(ctx.destination);
+        o.start(); o.stop(ctx.currentTime + dur);
+      } catch (e) { }
+    }
+
+    function suaraKlik() { playTone(800, 0.1, 'square', 0.2); }
+    function suaraBenar() {
+      playTone(523, 0.15, 'sine', 0.3);
+      setTimeout(() => playTone(659, 0.15, 'sine', 0.3), 150);
+      setTimeout(() => playTone(784, 0.3, 'sine', 0.3), 300);
+    }
+    function suaraSalah() {
+      playTone(300, 0.2, 'sawtooth', 0.25);
+      setTimeout(() => playTone(200, 0.4, 'sawtooth', 0.25), 200);
+    }
+
+    // ====== MUSIK LATAR ======
+    let musikOn = false, musikInterval;
+    const nadaMusik = [261, 329, 392, 329, 261, 392, 329, 261, 349, 293, 261, 329];
+    let idxNada = 0;
+
+    function toggleMusik() {
+      unlockAudio();
+      musikOn = !musikOn;
+      document.getElementById('musicBtn').textContent = musikOn ? '🔊' : '🔇';
+      if (musikOn) {
+        musikInterval = setInterval(() => {
+          playTone(nadaMusik[idxNada % nadaMusik.length], 0.4, 'triangle', 0.08);
+          idxNada++;
+        }, 500);
+      } else {
+        clearInterval(musikInterval);
+      }
+    }
+    document.getElementById('musicBtn').onclick = toggleMusik;
+
+    // ====== TEXT TO SPEECH ======
+    let voiceID = null;
+
+    function pilihVoiceIndonesia() {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length === 0) return null;
+      let voice = voices.find(v => v.lang === 'id-ID') ||
+        voices.find(v => v.lang.startsWith('id')) ||
+        voices.find(v => v.lang === 'ms-MY') ||
+        voices.find(v => v.lang.startsWith('ms'));
+      if (voice) voiceID = voice;
+      return voice;
+    }
+
+    if ('speechSynthesis' in window) {
+      pilihVoiceIndonesia();
+      speechSynthesis.onvoiceschanged = pilihVoiceIndonesia;
+    }
+
+    function bicara(teks) {
+      if (!('speechSynthesis' in window)) return;
+      speechSynthesis.cancel();
+      try {
+        const u = new SpeechSynthesisUtterance(teks);
+        if (voiceID) u.voice = voiceID;
+        u.lang = 'id-ID';
+        u.rate = 0.95;
+        u.pitch = 1;
+        u.volume = 1;
+        speechSynthesis.speak(u);
+      } catch (e) { console.warn('Bicara error:', e); }
+    }
+
+    function hentikanSuara() {
+      if ('speechSynthesis' in window) {
+        speechSynthesis.cancel();
+      }
+    }
+
+    function testSuara() {
+      unlockAudio();
+      setTimeout(() => {
+        playTone(440, 0.3, 'sine', 0.3);
+        setTimeout(() => playTone(660, 0.3, 'sine', 0.3), 350);
+      }, 100);
+      setTimeout(() => bicara("Test suara berhasil. Selamat belajar!"), 200);
+      alert("🔊 Jika kamu mendengar suara beep dan bicara, berarti audio berfungsi!");
+    }
+
+    // ====== GAME LOGIC ======
+    let idx = 0, skor = 0, sudahDijawab = false;
+    let timeoutBacaSoal = null; // 🔑 Variabel untuk menyimpan ID timeout
+
+    function mulaiKuis() {
+      unlockAudio();
+
+      // Acak urutan soal setiap mulai kuis
+      soal = shuffleArray(soalAsli);
+
+      if ('speechSynthesis' in window) {
+        const u = new SpeechSynthesisUtterance(" ");
+        speechSynthesis.speak(u);
+      }
+      document.getElementById('startScreen').classList.add('hidden');
+      document.getElementById('quizScreen').classList.remove('hidden');
+      catatAktivitas("Mulai kuis");
+      tampilkanSoal();
+      if (!musikOn) toggleMusik();
+    }
+
+    function tampilkanSoal() {
+      sudahDijawab = false;
+
+      // 🔑 Batalkan timeout pembacaan soal sebelumnya (jika ada)
+      if (timeoutBacaSoal) {
+        clearTimeout(timeoutBacaSoal);
+        timeoutBacaSoal = null;
+      }
+      hentikanSuara(); // Stop semua suara yang sedang berjalan
+
+      const s = soal[idx];
+      document.getElementById('qNum').textContent = idx + 1;
+      document.getElementById('score').textContent = skor;
+      document.getElementById('progressFill').style.width = ((idx) / 50 * 100) + '%';
+      document.getElementById('questionText').textContent = (idx + 1) + ". " + s.q;
+      document.getElementById('feedback').className = 'feedback';
+      document.getElementById('nextBtn').disabled = true;
+
+      const optDiv = document.getElementById('options');
+      optDiv.innerHTML = '';
+      const huruf = ['A', 'B', 'C', 'D'];
+      s.o.forEach((opsi, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'option';
+        btn.textContent = huruf[i] + ". " + opsi;
+        btn.addEventListener('click', () => pilihJawaban(i, btn));
+        optDiv.appendChild(btn);
+      });
+
+      document.getElementById('mainContainer').scrollTo({ top: 0, behavior: 'smooth' });
+
+      // 🔑 Simpan ID timeout agar bisa dibatalkan nanti
+      timeoutBacaSoal = setTimeout(() => {
+        if (!sudahDijawab) { // 🔑 Hanya baca jika belum dijawab
+          bicara(s.q + ". Pilihan: " + s.o.join(", "));
+        }
+        timeoutBacaSoal = null;
+      }, 500);
+    }
+
+    function bacaSoal() {
+      unlockAudio();
+      // 🔑 Batalkan timeout yang sedang berjalan
+      if (timeoutBacaSoal) {
+        clearTimeout(timeoutBacaSoal);
+        timeoutBacaSoal = null;
+      }
+      const s = soal[idx];
+      bicara(s.q + ". Pilihan: " + s.o.join(", "));
+    }
+
+    function pilihJawaban(pilihan, btn) {
+      if (sudahDijawab) return;
+      sudahDijawab = true;
+
+      unlockAudio();
+
+      // 🔑 KUNCI PERBAIKAN: Batalkan timeout pembacaan soal
+      if (timeoutBacaSoal) {
+        clearTimeout(timeoutBacaSoal);
+        timeoutBacaSoal = null;
+      }
+
+      // 🔑 Hentikan suara apapun yang sedang diputar
+      hentikanSuara();
+
+      // Baru mainkan suara klik
+      setTimeout(suaraKlik, 50);
+
+      const s = soal[idx];
+      const buttons = document.querySelectorAll('.option');
+      buttons.forEach(b => b.disabled = true);
+
+      const fb = document.getElementById('feedback');
+      if (pilihan === s.a) {
+        btn.classList.add('correct');
+        skor += 2;
+        setTimeout(suaraBenar, 200);
+        fb.textContent = '✅ Benar! +2 poin';
+        fb.className = 'feedback show benar';
+        // 🔑 Beri jeda agar suara efek selesai dulu baru bicara
+        setTimeout(() => {
+          if (sudahDijawab) bicara("Benar!");
+        }, 700);
+      } else {
+        btn.classList.add('wrong');
+        buttons[s.a].classList.add('correct');
+        setTimeout(suaraSalah, 200);
+        fb.textContent = '❌ Salah. Jawaban benar: ' + ['A', 'B', 'C', 'D'][s.a] + ". " + s.o[s.a];
+        fb.className = 'feedback show salah';
+        setTimeout(() => {
+          if (sudahDijawab) bicara("Salah. Jawaban yang benar adalah " + s.o[s.a]);
+        }, 700);
+      }
+
+      document.getElementById('score').textContent = skor;
+      document.getElementById('nextBtn').disabled = false;
+
+      setTimeout(() => {
+        fb.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }, 100);
+    }
+
+    function nextSoal() {
+      unlockAudio();
+      // 🔑 Hentikan suara feedback sebelum lanjut
+      hentikanSuara();
+      suaraKlik();
+      idx++;
+      if (idx >= soal.length) {
+        selesai();
+      } else {
+        tampilkanSoal();
+      }
+    }
+
+    function selesai() {
+      document.getElementById('quizScreen').classList.add('hidden');
+      document.getElementById('endScreen').classList.remove('hidden');
+      document.getElementById('finalScore').textContent = skor;
+      document.getElementById('mainContainer').scrollTo({ top: 0, behavior: 'smooth' });
+
+      let pesan = "";
+      if (skor >= 90) pesan = "Kamu Mendapatkan 🏆, Luar biasa! Kamu sangat menguasai materi!";
+      else if (skor >= 70) pesan = "Kamu dapat 👍, Bagus! Terus belajar ya!";
+      else if (skor >= 40) pesan = "Hasilnya Lumayan, semangat ya, masih perlu belajar lagi.";
+      else pesan = "📚 Jangan menyerah, ayo baca ulang materinya!";
+
+      document.getElementById('pesanAkhir').textContent = pesan;
+
+      // Skor pada kuis ini bertambah 2 poin per jawaban benar.
+      const jumlahJawabanBenar = Math.round(skor / 2);
+      catatAktivitas("Kuis selesai", {
+        skor: skor,
+        jumlahSoal: soal.length,
+        jawabanBenar: jumlahJawabanBenar
+      });
+
+      if (skor >= 70) setTimeout(suaraBenar, 300);
+      setTimeout(() => bicara("Kuis selesai. Skor kamu " + skor + " dari 100. " + pesan), 800);
+    }
+
+    // 1. Matikan Klik Kanan
+    document.addEventListener('contextmenu', event => event.preventDefault());
+
+    // 2. Matikan Shortcut Keyboard (F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U)
+    document.onkeydown = function (e) {
+      if (e.keyCode == 123) { // F12
+        return false;
+      }
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { // Ctrl+Shift+I
+        return false;
+      }
+      if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) { // Ctrl+Shift+J
+        return false;
+      }
+      if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { // Ctrl+U (View Source)
+        return false;
+      }
+    }
+  </script>
 </body>
+
 </html>
